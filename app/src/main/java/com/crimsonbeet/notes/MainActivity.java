@@ -1,6 +1,7 @@
 package com.crimsonbeet.notes;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,8 +13,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import com.crimsonbeet.notes.models.Note;
+
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener {
+
+    public static final String NOTE_TITLE = "com.crimsonbeet.notes.NOTE_TITLE";
 
     private boolean firstLaunch;
     private SharedPreferences sharedPreferences;
@@ -175,5 +180,23 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     public void createNewNote(String title) {
         // TODO: Implement
 
+        int id = createNewNoteId();
+
+        Note note = new Note(id, title, "");
+        saveNote(note);
+
+        // TODO: Pass newly created Note object to NoteActivity using intent
+        Intent intent = new Intent(this, NoteActivity.class);
+        intent.putExtra(NOTE_TITLE, title);
+        startActivity(intent);
+    }
+
+    private int createNewNoteId() {
+        // TODO: Implement
+        return 0;
+    }
+
+    private void saveNote(Note note) {
+        // TODO: Implement
     }
 }
