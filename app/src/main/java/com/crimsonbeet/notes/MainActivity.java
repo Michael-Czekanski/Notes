@@ -1,5 +1,6 @@
 package com.crimsonbeet.notes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.preference.*;
 
@@ -43,6 +45,21 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         inflater.inflate(R.menu.main_menu, menu);
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.new_note:
+                showNewNoteDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showNewNoteDialog() {
+        // TODO: Implement
     }
 
     private void handleFirstLaunch() {
