@@ -13,7 +13,8 @@ import android.view.MenuItem;
 
 import androidx.preference.*;
 
-public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener {
+public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
+        NewNoteDialogListener {
 
     private boolean firstLaunch;
     private SharedPreferences sharedPreferences;
@@ -59,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     private void showNewNoteDialog() {
-        // TODO: Implement
+        NewNoteDialogFragment noteDialogFragment = new NewNoteDialogFragment();
+        noteDialogFragment.show(getSupportFragmentManager(),
+                getResources().getString(R.string.dialogTitle_newNote));
     }
 
     private void handleFirstLaunch() {
@@ -167,5 +170,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void createNewNote(String title) {
+        // TODO: Implement
     }
 }
