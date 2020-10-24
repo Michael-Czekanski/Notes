@@ -5,7 +5,9 @@
     <string name="dialogTitle_setPassword">Set Password</string>
     <string name="title_addIcon">Add</string>
     <string name="title_changePassword">Change Password</string>
-    
+
+
+    <string name="hint_noteTitle">Note Title</string>
     <string name="ok">OK</string>
     <string name="password">Password</string>
     <string name="repeatPassword">Repeat password</string>
