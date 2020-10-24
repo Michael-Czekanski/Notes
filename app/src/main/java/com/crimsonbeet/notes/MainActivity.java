@@ -192,8 +192,14 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     private int createNewNoteId() {
-        // TODO: Implement
-        return 0;
+        String sharedPrefsKey = getResources().getString(R.string.sharedPrefsKey_lastNoteId);
+        int lastNoteId = sharedPreferences.getInt(sharedPrefsKey, 0);
+        int newNoteId = lastNoteId + 1;
+
+        sharedPrefsEditor.putInt(sharedPrefsKey, newNoteId);
+        sharedPrefsEditor.apply();
+
+        return newNoteId;
     }
 
     private void saveNote(Note note) {
