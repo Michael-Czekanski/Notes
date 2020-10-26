@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Scanner;
 
 public class JsonManager {
@@ -22,13 +23,13 @@ public class JsonManager {
         return "note" + nodeId + ".json";
     }
 
-    private Scanner openJsonFile(String filePath) throws FileNotFoundException {
+    private FileReader openJsonFile(String filePath) throws FileNotFoundException {
         File jsonFile = new File(filePath);
 
         if (!jsonFile.exists()) {
             throw new FileNotFoundException();
         }
-        return new Scanner(jsonFile);
+        return new FileReader(jsonFile);
     }
 
 }
