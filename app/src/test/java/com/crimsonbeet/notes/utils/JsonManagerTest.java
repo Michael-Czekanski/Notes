@@ -31,11 +31,11 @@ public class JsonManagerTest {
     }
 
     @Test
-    public void jsonStringToNote_CorrectString() {
+    public void noteFromJsonString_CorrectString() {
         String json = "{\"id\":1,\"title\":\"Test\",\"content\":\"Content\"}";
 
         Note expectedNote = new Note(1, "Test", "Content");
-        Note actualNote = JsonManager.jsonStringToNote(json);
+        Note actualNote = JsonManager.noteFromJsonString(json);
 
         assertNotNull(actualNote);
         assertEquals(expectedNote.getId(), actualNote.getId());

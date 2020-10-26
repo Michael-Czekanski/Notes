@@ -24,7 +24,7 @@ public class JsonManager {
      * @return Note object or null
      */
     @Nullable
-    public static Note jsonStringToNote(String json) {
+    public static Note noteFromJsonString(String json) {
         Gson gson = new Gson();
 
         try {
