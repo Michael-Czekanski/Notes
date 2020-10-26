@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class JsonManager {
@@ -61,6 +62,20 @@ public class JsonManager {
             return note;
         }
         return null;
+    }
+
+    public String writeNoteToJson(Note note) throws IOException {
+        String filename = getJsonFilename(note.getId());
+
+        File file = new File(filename);
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(noteToJsonString(note));
+            fileWriter.close();
+            return filename;
+        } catch (IOException e) {
+            throw new IOException("Error writing note to json file.");
+        }
     }
 
 }
