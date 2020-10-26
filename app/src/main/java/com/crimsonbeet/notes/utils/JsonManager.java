@@ -78,4 +78,14 @@ public class JsonManager {
         }
     }
 
+    public boolean deleteNoteJsonFile(int noteId){
+        File file = new File(getJsonFilename(noteId));
+        return file.delete();
+    }
+
+    public boolean deleteNoteJsonFile(Note note){
+        File file = new File(getJsonFilename(note.getId()));
+        return file.delete();
+    }
+
 }
