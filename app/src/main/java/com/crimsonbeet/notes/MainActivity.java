@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import com.crimsonbeet.notes.models.Note;
+import com.crimsonbeet.notes.utils.JsonManager;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener {
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPrefsEditor;
 
+    private JsonManager jsonManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefsEditor = sharedPreferences.edit();
 
+        jsonManager = new JsonManager();
         String keyFirstLaunch = getResources().getString(R.string.sharedPrefsKey_firstLaunch);
         firstLaunch = sharedPreferences.getBoolean(keyFirstLaunch, true);
 
@@ -183,12 +189,20 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         int id = createNewNoteId();
 
         Note note = new Note(id, title, "");
-        saveNote(note);
+        try {
+            saveNote(note);
+        } catch (IOException e) {
+            handleNoteSaveError();
+        }
 
         // TODO: Pass newly created Note object to NoteActivity using intent
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra(NOTE_TITLE, title);
         startActivity(intent);
+    }
+
+    private void handleNoteSaveError() {
+        // TODO: Implement
     }
 
     private int createNewNoteId() {
@@ -202,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         return newNoteId;
     }
 
-    private void saveNote(Note note) {
-        // TODO: Implement
+    private void saveNote(Note note) throws IOException {
+        jsonManager.writeNoteToJson(note);
     }
 }
