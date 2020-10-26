@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Scanner;
 
 public class JsonManager {
     private final Gson gson;
@@ -23,6 +22,18 @@ public class JsonManager {
         return "note" + nodeId + ".json";
     }
 
+    private boolean deserializationSuccess(Note deserializedNote){
+        boolean success = true;
+
+        if(deserializedNote.getTitle() == null){
+            success = false;
+        }
+        if(deserializedNote.getContent() == null){
+            success = false;
+        }
+        return success;
+    }
+
     private FileReader openJsonFile(String filePath) throws FileNotFoundException {
         File jsonFile = new File(filePath);
 
@@ -30,6 +41,17 @@ public class JsonManager {
             throw new FileNotFoundException();
         }
         return new FileReader(jsonFile);
+    }
+
+    public Note readNoteFromJson(int noteId) throws FileNotFoundException {
+        String filename = getJsonFilename(noteId);
+        FileReader reader = openJsonFile(filename);
+
+        Note note = gson.fromJson(reader, Note.class);
+        if(deserializationSuccess(note)){
+            return note;
+        }
+        return null;
     }
 
 }
