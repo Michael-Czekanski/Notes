@@ -6,6 +6,10 @@ import com.crimsonbeet.notes.models.Note;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class JsonManager {
     public static String noteToJsonString(Note note) {
         Gson gson = new Gson();
@@ -33,4 +37,14 @@ public class JsonManager {
             return null;
         }
     }
+
+    private static Scanner openJsonFile(String filePath) throws FileNotFoundException {
+        File jsonFile = new File(filePath);
+
+        if (!jsonFile.exists()) {
+            throw new FileNotFoundException();
+        }
+        return new Scanner(jsonFile);
+    }
+
 }
