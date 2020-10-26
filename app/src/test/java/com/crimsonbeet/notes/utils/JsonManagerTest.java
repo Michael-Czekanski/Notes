@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -64,5 +65,32 @@ public class JsonManagerTest {
         Assert.assertEquals(expectedNoteId, actualNote.getId());
         Assert.assertEquals(expectedNoteTitle, actualNote.getTitle());
         Assert.assertEquals(expectedNoteContent, actualNote.getContent());
+    }
+
+    @Test
+    public void writeNoteToJson() throws IOException {
+        JsonManager jsonManager = new JsonManager();
+
+        Note note = new Note(1, "Title", "Content");
+        String filename = jsonManager.writeNoteToJson(note);
+
+        String expectedFileContent = String.format("{\"id\":%d,\"title\":\"%s\",\"content\":\"%s\"}",
+                note.getId(), note.getTitle(), note.getContent());
+
+        StringBuilder actualFileContent = new StringBuilder();
+
+        FileReader fileReader = new FileReader(filename);
+        int charAsInt = fileReader.read();
+        while (charAsInt > -1) {
+            actualFileContent.append((char) charAsInt);
+            charAsInt = fileReader.read();
+        }
+        fileReader.close();
+
+        if (!deleteNoteJsonFile(filename)) {
+            throw new IOException("Can not delete test json file.");
+        }
+
+        Assert.assertEquals(expectedFileContent, actualFileContent.toString());
     }
 }
