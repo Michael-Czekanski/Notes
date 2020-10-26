@@ -24,7 +24,7 @@ public class JsonManagerTest {
      */
     private String createNoteJsonFile(int noteId, String noteTitle, String noteContent) throws IOException {
         String filename = "note" + noteId + ".json";
-        String jsonString = String.format("{id:%d,title:\"%s\",content:\"%s\"}",
+        String jsonString = String.format("{\"id\":%d,\"title\":\"%s\",\"content\":\"%s\"}",
                 noteId, noteTitle, noteContent);
         File file = new File(filename);
 
