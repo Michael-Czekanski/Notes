@@ -8,16 +8,21 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class JsonManager {
-    private static String noteToJsonString(Note note) {
-        Gson gson = new Gson();
+    private final Gson gson;
+
+    public JsonManager() {
+        gson = new Gson();
+    }
+
+    private String noteToJsonString(Note note) {
         return gson.toJson(note);
     }
 
-    private static String getJsonFilename(int nodeId) {
+    private String getJsonFilename(int nodeId) {
         return "note" + nodeId + ".json";
     }
 
-    private static Scanner openJsonFile(String filePath) throws FileNotFoundException {
+    private Scanner openJsonFile(String filePath) throws FileNotFoundException {
         File jsonFile = new File(filePath);
 
         if (!jsonFile.exists()) {
