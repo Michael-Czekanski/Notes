@@ -9,4 +9,8 @@ public class JsonManager {
         return gson.toJson(note);
     }
 
+    public static String getJsonFilename(int nodeId) {
+        return "note" + nodeId + ".json";
+    }
+
 }
