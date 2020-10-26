@@ -17,6 +17,7 @@ import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.utils.JsonManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener {
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private SharedPreferences.Editor sharedPrefsEditor;
 
     private JsonManager jsonManager;
+
+    private ArrayList<Note> notes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +44,36 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         String keyFirstLaunch = getResources().getString(R.string.sharedPrefsKey_firstLaunch);
         firstLaunch = sharedPreferences.getBoolean(keyFirstLaunch, true);
 
-        if(firstLaunch){
+        if (firstLaunch) {
             handleFirstLaunch();
+        } else {
+            normalLaunch();
         }
-        else{
 
-        }
+    }
 
+    private void normalLaunch() {
+        // TODO: Implement
+        checkPassword();
+        readAllNotes();
+        visualizeNotes();
+        throw new UnsupportedOperationException();
+
+    }
+
+    private void visualizeNotes() {
+        // TODO: Implement
+        throw new UnsupportedOperationException();
+    }
+
+    private void readAllNotes() {
+        // TODO: Implement
+        throw new UnsupportedOperationException();
+    }
+
+    private void checkPassword() {
+        // TODO: Implement
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -203,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     private void handleNoteSaveError() {
         // TODO: Implement
+        throw new UnsupportedOperationException();
     }
 
     private int createNewNoteId() {
