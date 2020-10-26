@@ -18,4 +18,14 @@ public class JsonManagerTest {
 
         assertEquals(expectedString, actualString);
     }
+
+    @Test
+    public void getJsonFilename() {
+        int noteId = 1;
+
+        String expectedFilename = "note1.json";
+        String actualFilename = JsonManager.getJsonFilename(noteId);
+
+        assertEquals(expectedFilename, actualFilename);
+    }
 }
