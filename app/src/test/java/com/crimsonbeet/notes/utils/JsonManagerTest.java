@@ -5,6 +5,7 @@ import com.crimsonbeet.notes.models.Note;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class JsonManagerTest {
 
@@ -27,5 +28,18 @@ public class JsonManagerTest {
         String actualFilename = JsonManager.getJsonFilename(noteId);
 
         assertEquals(expectedFilename, actualFilename);
+    }
+
+    @Test
+    public void jsonStringToNote_CorrectString() {
+        String json = "{\"id\":1,\"title\":\"Test\",\"content\":\"Content\"}";
+
+        Note expectedNote = new Note(1, "Test", "Content");
+        Note actualNote = JsonManager.jsonStringToNote(json);
+
+        assertNotNull(actualNote);
+        assertEquals(expectedNote.getId(), actualNote.getId());
+        assertEquals(expectedNote.getTitle(), actualNote.getTitle());
+        assertEquals(expectedNote.getContent(), actualNote.getContent());
     }
 }
