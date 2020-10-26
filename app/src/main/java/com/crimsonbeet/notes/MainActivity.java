@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager;
 import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.utils.JsonManager;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         NewNoteDialogListener {
 
     public static final String NOTE_TITLE = "com.crimsonbeet.notes.NOTE_TITLE";
+    public static final int MIN_NOTE_ID = 1;
 
     private boolean firstLaunch;
     private SharedPreferences sharedPreferences;
@@ -55,10 +57,19 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private void normalLaunch() {
         // TODO: Implement
         checkPassword();
-        readAllNotes();
+        try {
+            notes = readAllNotes();
+        } catch (IOException e) {
+            handleReadingNotesError();
+        }
         visualizeNotes();
         throw new UnsupportedOperationException();
 
+    }
+
+    private void handleReadingNotesError() {
+        // TODO: Implement
+        throw new UnsupportedOperationException();
     }
 
     private void visualizeNotes() {
@@ -66,9 +77,26 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         throw new UnsupportedOperationException();
     }
 
-    private void readAllNotes() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+    /**
+     * Reads all notes.
+     *
+     * @throws IOException
+     */
+    private ArrayList<Note> readAllNotes() throws IOException {
+        ArrayList<Note> notes = new ArrayList<>();
+
+        String sharedPrefsKey = getResources().getString(R.string.sharedPrefsKey_lastNoteId);
+        int lastNoteId = sharedPreferences.getInt(sharedPrefsKey, 0);
+
+        for (int noteId = MIN_NOTE_ID; noteId <= lastNoteId; noteId++) {
+            try {
+                notes.add(jsonManager.readNoteFromJson(noteId));
+            } catch (FileNotFoundException ignored) {
+            } catch (IOException e1) {
+                throw new IOException("Error reading note, noteId = " + noteId);
+            }
+        }
+        return notes;
     }
 
     private void checkPassword() {
