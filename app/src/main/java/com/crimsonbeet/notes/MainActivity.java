@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener, CheckPasswordDialogListener {
 
-    public static final String NOTE_TITLE = "com.crimsonbeet.notes.NOTE_TITLE";
+    public static final String NOTE_PARCELABLE = "com.crimsonbeet.notes.NOTE_PARCELABLE";
     public static final int MIN_NOTE_ID = 1;
 
     private boolean firstLaunch;
@@ -254,9 +254,12 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             handleNoteSaveError();
         }
 
-        // TODO: Pass newly created Note object to NoteActivity using intent
+        openNoteActivity(note);
+    }
+
+    private void openNoteActivity(Note note) {
         Intent intent = new Intent(this, NoteActivity.class);
-        intent.putExtra(NOTE_TITLE, title);
+        intent.putExtra(NOTE_PARCELABLE, note);
         startActivity(intent);
     }
 
