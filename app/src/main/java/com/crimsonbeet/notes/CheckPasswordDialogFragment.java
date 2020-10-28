@@ -17,6 +17,8 @@ public class CheckPasswordDialogFragment extends DialogFragment {
     private EditText editTextPassword;
     private CheckPasswordDialogListener listener;
 
+    private boolean okButtonClicked = false;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class CheckPasswordDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
+                okButtonClicked = true;
                 String givenPassword = editTextPassword.getText().toString();
                 listener.checkPassword(givenPassword);
             }
@@ -49,5 +52,16 @@ public class CheckPasswordDialogFragment extends DialogFragment {
                     (context.toString() + "must implement " + CheckPasswordDialogListener.class.toString());
         }
         super.onAttach(context);
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (!okButtonClicked) {
+            listener.checkPasswordDialogDismissed();
+        } else {
+            okButtonClicked = false;
+        }
     }
 }
