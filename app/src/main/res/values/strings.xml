@@ -19,6 +19,7 @@
     <string name="dialogMsg_providePassword">Provide password</string>
     <string name="dialogMsg_passwordsNotMatch">Passwords don\'t match</string>
     <string name="dialogMsg_passwordSet">Password set</string>
+    <string name="dialogMsg_wrongPassword">Wrong Password</string>
 
     <!-- Shared preferences keys -->
     <string name="sharedPrefsKey_firstLaunch">firstLaunch</string>

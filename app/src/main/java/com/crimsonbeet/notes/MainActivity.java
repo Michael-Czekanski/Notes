@@ -55,16 +55,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     private void normalLaunch() {
-        // TODO: Implement
         showCheckPasswordDialog();
-        try {
-            notes = readAllNotes();
-        } catch (IOException e) {
-            handleReadingNotesError();
-        }
-        visualizeNotes();
-        throw new UnsupportedOperationException();
-
     }
 
     private void handleReadingNotesError() {
@@ -278,6 +269,52 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public void checkPassword(String password) {
+        String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
+
+        String savedPassword = sharedPreferences.getString(keyPassword, null);
+
+        if (!password.equals(savedPassword)) {
+            showWrongPasswordDialog();
+        } else {
+            passwordChecked();
+        }
+    }
+
+    private void passwordChecked() {
+        loadAllNotes();
+        displayNotes();
+    }
+
+    private void displayNotes() {
+        // TODO: Implement
         throw new UnsupportedOperationException();
+    }
+
+    private void loadAllNotes() {
+        try {
+            notes = readAllNotes();
+        } catch (IOException e) {
+            handleReadingNotesError();
+        }
+    }
+
+    private void showWrongPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialogMsg_wrongPassword);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                showCheckPasswordDialog();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
