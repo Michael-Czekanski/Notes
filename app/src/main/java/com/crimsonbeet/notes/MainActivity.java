@@ -389,6 +389,95 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public void changePassword(String oldPassword, String newPassword, String repeatedNewPassword) {
+        String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
 
+        String savedPassword = sharedPreferences.getString(keyPassword, null);
+
+        if (!oldPassword.equals(savedPassword)) {
+            showWrongOldPasswordDialog();
+        } else {
+            if (newPassword.isEmpty()) {
+                showProvideNewPasswordDialog();
+            } else if (!newPassword.equals(repeatedNewPassword)) {
+                showNewPasswordsNotMatchDialog();
+            } else {
+                showPasswordChangedDialog();
+                saveUserPassword(newPassword);
+            }
+        }
+    }
+
+    private void showPasswordChangedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialogMsg_passwordChanged);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showNewPasswordsNotMatchDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialogMsg_newPasswordsNotMatch);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                showChangePasswordDialog();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showProvideNewPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialogMsg_provideNewPassword);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                showChangePasswordDialog();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showWrongOldPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.dialogMsg_wrongOldPassword);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                showChangePasswordDialog();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

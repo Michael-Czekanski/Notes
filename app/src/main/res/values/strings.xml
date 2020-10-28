@@ -24,6 +24,10 @@
     <string name="dialogMsg_passwordsNotMatch">Passwords don\'t match</string>
     <string name="dialogMsg_passwordSet">Password set</string>
     <string name="dialogMsg_wrongPassword">Wrong Password</string>
+    <string name="dialogMsg_wrongOldPassword">Wrong Old Password</string>
+    <string name="dialogMsg_provideNewPassword">Provide New Password</string>
+    <string name="dialogMsg_newPasswordsNotMatch">New Passwords Don\'t Match</string>
+    <string name="dialogMsg_passwordChanged">Password Changed</string>
 
     <!-- Shared preferences keys -->
     <string name="sharedPrefsKey_firstLaunch">firstLaunch</string>
