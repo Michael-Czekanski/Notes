@@ -40,7 +40,7 @@ public class NoteActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent returnIntent = new Intent();
         returnIntent.putExtra(MainActivity.NOTE_PARCELABLE, note);
-        setResult(Activity.RESULT_OK);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 }
