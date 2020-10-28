@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".NoteActivity">
 
-    <TextView
-        android:id="@+id/textView_noteTitle"
+    <EditText
+        android:id="@+id/editText_noteTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -18,7 +18,7 @@
         android:id="@+id/editText_noteContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textView_noteTitle"
+        android:layout_below="@id/editText_noteTitle"
         android:background="@color/colorNoteContent"
         android:fontFamily="casual"
         android:gravity="start"

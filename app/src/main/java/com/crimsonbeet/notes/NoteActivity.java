@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +11,7 @@ import com.crimsonbeet.notes.models.Note;
 
 public class NoteActivity extends AppCompatActivity {
 
-    private TextView textViewNoteTitle;
+    private EditText editTextNoteTitle;
     private EditText editTextNoteContent;
 
     private Note note;
@@ -22,7 +21,7 @@ public class NoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        textViewNoteTitle = findViewById(R.id.textView_noteTitle);
+        editTextNoteTitle = findViewById(R.id.editText_noteTitle);
         editTextNoteContent = findViewById(R.id.editText_noteContent);
 
         Intent intent = getIntent();
@@ -32,7 +31,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void displayNote(Note note) {
-        textViewNoteTitle.setText(note.getTitle());
+        editTextNoteTitle.setText(note.getTitle());
         editTextNoteContent.setText(note.getContent());
     }
 
