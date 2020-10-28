@@ -12,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crimsonbeet.notes.models.Note;
+import com.crimsonbeet.notes.notesrecyclerview.NotesAdapter;
 import com.crimsonbeet.notes.utils.JsonManager;
 
 import java.io.FileNotFoundException;
@@ -34,10 +37,19 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     private ArrayList<Note> notes;
 
+    private RecyclerView notesRecyclerView;
+    private NotesAdapter notesAdapter;
+    private LinearLayoutManager layoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        notesRecyclerView = findViewById(R.id.recyclerView_notesList);
+        layoutManager = new LinearLayoutManager(this);
+        notesRecyclerView.setLayoutManager(layoutManager);
+
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefsEditor = sharedPreferences.edit();
@@ -290,9 +302,12 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         displayNotes();
     }
 
+    /**
+     * Displays notes on the recycler view. Use only once, after notes are loaded from json files.
+     */
     private void displayNotes() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+        notesAdapter = new NotesAdapter(notes);
+        notesRecyclerView.setAdapter(notesAdapter);
     }
 
     private void loadAllNotes() {
