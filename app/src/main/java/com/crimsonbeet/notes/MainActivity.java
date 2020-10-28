@@ -242,8 +242,6 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public void createNewNote(String title) {
-        // TODO: Implement
-
         int id = createNewNoteId();
 
         Note note = new Note(id, title, "");
