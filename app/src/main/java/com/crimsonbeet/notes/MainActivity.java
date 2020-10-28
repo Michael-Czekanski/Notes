@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefsEditor = sharedPreferences.edit();
 
-        jsonManager = new JsonManager();
+        jsonManager = new JsonManager(getFilesDir());
         String keyFirstLaunch = getResources().getString(R.string.sharedPrefsKey_firstLaunch);
         firstLaunch = sharedPreferences.getBoolean(keyFirstLaunch, true);
 

@@ -11,9 +11,11 @@ import java.io.IOException;
 
 public class JsonManager {
     private final Gson gson;
+    private final File filesDirectory;
 
-    public JsonManager() {
+    public JsonManager(File filesDirectory) {
         gson = new Gson();
+        this.filesDirectory = filesDirectory;
     }
 
     private String noteToJsonString(Note note) {
@@ -21,7 +23,7 @@ public class JsonManager {
     }
 
     private String getJsonFilename(int nodeId) {
-        return "note" + nodeId + ".json";
+        return filesDirectory + File.separator + "note" + nodeId + ".json";
     }
 
     private boolean deserializationSuccess(Note deserializedNote){
