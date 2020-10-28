@@ -280,6 +280,11 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         }
     }
 
+    @Override
+    public void checkPasswordDialogDismissed() {
+        showCheckPasswordDialog();
+    }
+
     private void passwordChecked() {
         loadAllNotes();
         displayNotes();
