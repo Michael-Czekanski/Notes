@@ -1,6 +1,7 @@
 package com.crimsonbeet.notes;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,5 +37,17 @@ public class CheckPasswordDialogFragment extends DialogFragment {
         });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+
+        try {
+            listener = (CheckPasswordDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException
+                    (context.toString() + "must implement " + CheckPasswordDialogListener.class.toString());
+        }
+        super.onAttach(context);
     }
 }
