@@ -37,6 +37,9 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        note.setTitle(editTextNoteTitle.getText().toString());
+        note.setContent(editTextNoteContent.getText().toString());
+
         Intent returnIntent = new Intent();
         returnIntent.putExtra(MainActivity.NOTE_PARCELABLE, note);
         setResult(Activity.RESULT_OK, returnIntent);
