@@ -26,7 +26,7 @@ public class NoteActivity extends AppCompatActivity {
         editTextNoteContent = findViewById(R.id.editText_noteContent);
 
         Intent intent = getIntent();
-        Note note = intent.getParcelableExtra(MainActivity.NOTE_PARCELABLE);
+        note = intent.getParcelableExtra(MainActivity.NOTE_PARCELABLE);
 
         displayNote(note);
     }
