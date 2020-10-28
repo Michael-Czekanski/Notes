@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.notesrecyclerview.NotesAdapter;
+import com.crimsonbeet.notes.notesrecyclerview.NotesViewHolderClickListener;
 import com.crimsonbeet.notes.utils.JsonManager;
 
 import java.io.FileNotFoundException;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
-        NewNoteDialogListener, CheckPasswordDialogListener {
+        NewNoteDialogListener, CheckPasswordDialogListener, NotesViewHolderClickListener {
 
     public static final String NOTE_PARCELABLE = "com.crimsonbeet.notes.NOTE_PARCELABLE";
     public static final int MIN_NOTE_ID = 1;
@@ -339,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
      * Displays notes on the recycler view. Use only once, after notes are loaded from json files.
      */
     private void displayNotes() {
-        notesAdapter = new NotesAdapter(notes);
+        notesAdapter = new NotesAdapter(notes, this);
         notesRecyclerView.setAdapter(notesAdapter);
     }
 
@@ -369,5 +370,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void notesViewHolderClick(Note note) {
+        openNoteActivity(note);
     }
 }

@@ -15,10 +15,20 @@ public class NotesViewHolder extends RecyclerView.ViewHolder {
 
     private Note note;
 
-    public NotesViewHolder(@NonNull View viewNoteItem) {
+    private final NotesViewHolderClickListener clickListener;
+
+    public NotesViewHolder(@NonNull View viewNoteItem, final NotesViewHolderClickListener clickListener) {
         super(viewNoteItem);
         this.viewNoteItem = viewNoteItem;
+        this.clickListener = clickListener;
+
         textViewNoteTitle = viewNoteItem.findViewById(R.id.item_textView_noteTitle);
+        viewNoteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.notesViewHolderClick(note);
+            }
+        });
     }
 
     /**
