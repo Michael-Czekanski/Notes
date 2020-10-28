@@ -2,27 +2,36 @@ package com.crimsonbeet.notes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.crimsonbeet.notes.models.Note;
+
 public class NoteActivity extends AppCompatActivity {
 
     private TextView textViewNoteTitle;
+    private EditText editTextNoteContent;
+
+    private Note note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
 
-        Intent intent = getIntent();
         textViewNoteTitle = findViewById(R.id.textView_noteTitle);
+        editTextNoteContent = findViewById(R.id.editText_noteContent);
 
-        setNoteTitle(intent);
+        Intent intent = getIntent();
+        Note note = (Note) intent.getParcelableExtra(MainActivity.NOTE_PARCELABLE);
+
+        displayNote(note);
     }
 
-    private void setNoteTitle(Intent intent) {
-        String noteTitle = intent.getStringExtra(MainActivity.NOTE_TITLE);
-        textViewNoteTitle.setText(noteTitle);
+    private void displayNote(Note note) {
+        textViewNoteTitle.setText(note.getTitle());
+        editTextNoteContent.setText(note.getContent());
     }
 }
