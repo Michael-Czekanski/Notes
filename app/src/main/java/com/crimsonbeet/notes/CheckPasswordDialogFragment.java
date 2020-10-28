@@ -15,7 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 public class CheckPasswordDialogFragment extends DialogFragment {
     private EditText editTextPassword;
-    CheckPasswordDialogListener listener;
+    private CheckPasswordDialogListener listener;
 
     @NonNull
     @Override
