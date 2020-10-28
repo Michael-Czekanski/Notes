@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         Note note = new Note(id, title, "");
         try {
             saveNote(note);
+            notes.add(note);
         } catch (IOException e) {
             handleNoteSaveError();
         }
