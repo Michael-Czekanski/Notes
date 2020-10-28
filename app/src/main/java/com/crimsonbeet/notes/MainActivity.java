@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     private void normalLaunch() {
         // TODO: Implement
-        checkPassword();
+        showCheckPasswordDialog();
         try {
             notes = readAllNotes();
         } catch (IOException e) {
@@ -99,9 +99,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         return notes;
     }
 
-    private void checkPassword() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+    private void showCheckPasswordDialog() {
+        CheckPasswordDialogFragment checkPasswordDialog = new CheckPasswordDialogFragment();
+        checkPasswordDialog.show(getSupportFragmentManager(),
+                getResources().getString(R.string.dialogTitle_checkPassword));
     }
 
     @Override

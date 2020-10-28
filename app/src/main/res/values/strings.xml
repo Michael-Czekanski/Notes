@@ -4,6 +4,7 @@
     <!-- Titles -->
     <string name="dialogTitle_setPassword">Set Password</string>
     <string name="dialogTitle_newNote">New Note</string>
+    <string name="dialogTitle_checkPassword">Check Password</string>
     <string name="title_addIcon">Add</string>
     <string name="title_changePassword">Change Password</string>
 
