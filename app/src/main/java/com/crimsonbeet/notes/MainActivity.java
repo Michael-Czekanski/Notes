@@ -1,5 +1,6 @@
 package com.crimsonbeet.notes;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     public static final String NOTE_PARCELABLE = "com.crimsonbeet.notes.NOTE_PARCELABLE";
     public static final int MIN_NOTE_ID = 1;
+
+    public static final int NOTE_ACTIVITY_REQUEST_CODE = 1;
 
     private boolean firstLaunch;
     private SharedPreferences sharedPreferences;
@@ -258,7 +262,34 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private void openNoteActivity(Note note) {
         Intent intent = new Intent(this, NoteActivity.class);
         intent.putExtra(NOTE_PARCELABLE, note);
-        startActivity(intent);
+        startActivityForResult(intent, NOTE_ACTIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NOTE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Note resultNote = data.getParcelableExtra(NOTE_PARCELABLE);
+                for (Note note :
+                        notes) {
+                    if (note.getId() == resultNote.getId()) {
+                        note.setTitle(resultNote.getTitle());
+                        note.setContent(resultNote.getContent());
+
+                        notesAdapter.notifyDataSetChanged();
+                        try {
+                            saveNote(note);
+                        } catch (IOException e) {
+                            handleNoteSaveError();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
     private void handleNoteSaveError() {

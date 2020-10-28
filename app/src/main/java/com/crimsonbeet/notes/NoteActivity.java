@@ -1,5 +1,6 @@
 package com.crimsonbeet.notes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -25,7 +26,7 @@ public class NoteActivity extends AppCompatActivity {
         editTextNoteContent = findViewById(R.id.editText_noteContent);
 
         Intent intent = getIntent();
-        Note note = (Note) intent.getParcelableExtra(MainActivity.NOTE_PARCELABLE);
+        Note note = intent.getParcelableExtra(MainActivity.NOTE_PARCELABLE);
 
         displayNote(note);
     }
@@ -33,5 +34,13 @@ public class NoteActivity extends AppCompatActivity {
     private void displayNote(Note note) {
         textViewNoteTitle.setText(note.getTitle());
         editTextNoteContent.setText(note.getContent());
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra(MainActivity.NOTE_PARCELABLE, note);
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 }
