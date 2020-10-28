@@ -27,7 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
-        NewNoteDialogListener, CheckPasswordDialogListener, NotesViewHolderClickListener {
+        NewNoteDialogListener, CheckPasswordDialogListener, NotesViewHolderClickListener,
+        ChangePasswordDialogListener {
 
     public static final String NOTE_PARCELABLE = "com.crimsonbeet.notes.NOTE_PARCELABLE";
     public static final int MIN_NOTE_ID = 1;
@@ -123,13 +124,22 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.new_note:
                 showNewNoteDialog();
+                return true;
+            case R.id.change_password:
+                showChangePasswordDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showChangePasswordDialog() {
+        ChangePasswordDialogFragment changePasswordDialog = new ChangePasswordDialogFragment();
+        changePasswordDialog.show(getSupportFragmentManager(),
+                getResources().getString(R.string.dialogTitle_changePassword));
     }
 
     private void showNewNoteDialog() {
@@ -375,5 +385,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     @Override
     public void notesViewHolderClick(Note note) {
         openNoteActivity(note);
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, String repeatedNewPassword) {
+
     }
 }
