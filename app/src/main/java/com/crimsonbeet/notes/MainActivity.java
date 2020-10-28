@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
-        NewNoteDialogListener {
+        NewNoteDialogListener, CheckPasswordDialogListener {
 
     public static final String NOTE_TITLE = "com.crimsonbeet.notes.NOTE_TITLE";
     public static final int MIN_NOTE_ID = 1;
@@ -273,5 +273,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     private void saveNote(Note note) throws IOException {
         jsonManager.writeNoteToJson(note);
+    }
+
+    @Override
+    public void checkPassword(String password) {
+        throw new UnsupportedOperationException();
     }
 }
