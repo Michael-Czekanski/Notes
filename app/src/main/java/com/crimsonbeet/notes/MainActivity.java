@@ -14,12 +14,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.selection.SelectionPredicates;
+import androidx.recyclerview.selection.SelectionTracker;
+import androidx.recyclerview.selection.StableIdKeyProvider;
+import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.notesrecyclerview.NotesAdapter;
 import com.crimsonbeet.notes.notesrecyclerview.NotesViewHolderClickListener;
+import com.crimsonbeet.notes.notesrecyclerview.selection.NotesDetailsLookup;
 import com.crimsonbeet.notes.utils.JsonManager;
 
 import java.io.FileNotFoundException;
@@ -46,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private RecyclerView notesRecyclerView;
     private NotesAdapter notesAdapter;
     private LinearLayoutManager layoutManager;
+
+    private SelectionTracker<Long> selectionTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -352,6 +359,22 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private void displayNotes() {
         notesAdapter = new NotesAdapter(notes, this);
         notesRecyclerView.setAdapter(notesAdapter);
+
+        toggleSelection();
+    }
+
+    private void toggleSelection() {
+        SelectionTracker.Builder<Long> builder = new SelectionTracker.Builder<>(
+                getResources().getString(R.string.id_notes_selection),
+                notesRecyclerView,
+                new StableIdKeyProvider(notesRecyclerView),
+                new NotesDetailsLookup(notesRecyclerView),
+                StorageStrategy.createLongStorage()).withSelectionPredicate
+                (SelectionPredicates.<Long>createSelectAnything());
+
+        selectionTracker = builder.build();
+
+        notesAdapter.setSelectionTracker(selectionTracker);
     }
 
     private void loadAllNotes() {

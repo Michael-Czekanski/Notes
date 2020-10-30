@@ -33,4 +33,6 @@
     <string name="sharedPrefsKey_firstLaunch">firstLaunch</string>
     <string name="sharedPrefsKey_password">password</string>
     <string name="sharedPrefsKey_lastNoteId">lastNoteId</string>
+
+    <string name="id_notes_selection">notes_selection</string>
 </resources>
