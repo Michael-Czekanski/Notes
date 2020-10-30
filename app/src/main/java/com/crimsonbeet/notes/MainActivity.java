@@ -553,14 +553,22 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     public void noteSelectionNumChanged(int selectionNum) {
         if (selectionNum > 0) {
             if (!notesSelectedMenuMode) {
-                displayNotesSelectedMenu();
-                notesSelectedMenuMode = true;
+                toggleNotesSelectedMenuMode(true);
             }
         }
         if (selectionNum == 0) {
-            closeNotesSelectedMenuMode();
-            notesSelectedMenuMode = false;
+            toggleNotesSelectedMenuMode(false);
         }
+    }
+
+    private void toggleNotesSelectedMenuMode(boolean toggle) {
+        if (toggle) {
+            displayNotesSelectedMenu();
+        } else {
+            closeNotesSelectedMenuMode();
+        }
+        notesSelectedMenuMode = toggle;
+
     }
 
     private void closeNotesSelectedMenuMode() {
@@ -574,5 +582,14 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.multi_selection_menu, menu);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (notesSelectedMenuMode) {
+            selectionTracker.clearSelection();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
