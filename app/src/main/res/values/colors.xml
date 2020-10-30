@@ -6,5 +6,6 @@
 
     <color name="colorNoteContent">#DBFCCB</color>
     <color name="colorNoteTitle">#B9DFA5</color>
+    <color name="colorNoteSelected">#FF8BBA72</color>
 
 </resources>
