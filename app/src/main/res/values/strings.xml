@@ -9,7 +9,9 @@
     <string name="title_addIcon">Add</string>
     <string name="title_changePassword">Change Password</string>
 
-
+    <string name="ask_if_delete_notes">Delete selected notes?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="hint_noteTitle">Note Title</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>

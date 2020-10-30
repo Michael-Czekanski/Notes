@@ -146,11 +146,30 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
                 showChangePasswordDialog();
                 return true;
             case R.id.delete_notes:
-                deleteSelectedNotes(selectionTracker.getSelection());
+                showAreYouSureToDeleteDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showAreYouSureToDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.ask_if_delete_notes);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteSelectedNotes(selectionTracker.getSelection());
+            }
+        });
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void deleteSelectedNotes(Selection<Long> selection) {
