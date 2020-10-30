@@ -19,6 +19,8 @@ public class NotesViewHolder extends RecyclerView.ViewHolder {
 
     private final NotesViewHolderClickListener clickListener;
 
+    private boolean isActivated;
+
     public NotesViewHolder(@NonNull View viewNoteItem, final NotesViewHolderClickListener clickListener) {
         super(viewNoteItem);
         this.viewNoteItem = viewNoteItem;
@@ -28,7 +30,9 @@ public class NotesViewHolder extends RecyclerView.ViewHolder {
         viewNoteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListener.notesViewHolderClick(note);
+                if (!isActivated) {
+                    clickListener.notesViewHolderClick(note);
+                }
             }
         });
     }
@@ -41,6 +45,7 @@ public class NotesViewHolder extends RecyclerView.ViewHolder {
     public void bind(Note note, boolean isActivated) {
         this.note = note;
         textViewNoteTitle.setText(note.getTitle());
+        this.isActivated = isActivated;
         viewNoteItem.setActivated(isActivated);
     }
 
