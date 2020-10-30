@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.selection.Selection;
 import androidx.recyclerview.selection.SelectionPredicates;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StableIdKeyProvider;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.notesrecyclerview.NotesAdapter;
 import com.crimsonbeet.notes.notesrecyclerview.NotesViewHolderClickListener;
+import com.crimsonbeet.notes.notesrecyclerview.selection.NoteItemSelectedListener;
 import com.crimsonbeet.notes.notesrecyclerview.selection.NotesDetailsLookup;
 import com.crimsonbeet.notes.utils.JsonManager;
 
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener, CheckPasswordDialogListener, NotesViewHolderClickListener,
-        ChangePasswordDialogListener {
+        ChangePasswordDialogListener, NoteItemSelectedListener {
 
     public static final String NOTE_PARCELABLE = "com.crimsonbeet.notes.NOTE_PARCELABLE";
     public static final int MIN_NOTE_ID = 1;
@@ -53,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private LinearLayoutManager layoutManager;
 
     private SelectionTracker<Long> selectionTracker;
+
+    private boolean notesSelectedMenuMode = false;
+
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
@@ -138,9 +145,28 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             case R.id.change_password:
                 showChangePasswordDialog();
                 return true;
+            case R.id.delete_notes:
+                deleteSelectedNotes(selectionTracker.getSelection());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void deleteSelectedNotes(Selection<Long> selection) {
+        ArrayList<Note> notesToDelete = new ArrayList<>();
+        for (long selectedKey : selection) {
+            notesToDelete.add(notes.get((int) selectedKey));
+        }
+
+
+        notes.removeAll(notesToDelete);
+        for (Note note : notesToDelete) {
+            jsonManager.deleteNoteJsonFile(note);
+        }
+
+        notesAdapter.notifyDataSetChanged();
+        selectionTracker.clearSelection();
     }
 
     private void showChangePasswordDialog() {
@@ -357,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
      * Displays notes on the recycler view. Use only once, after notes are loaded from json files.
      */
     private void displayNotes() {
-        notesAdapter = new NotesAdapter(notes, this);
+        notesAdapter = new NotesAdapter(notes, this, this);
         notesRecyclerView.setAdapter(notesAdapter);
 
         toggleSelection();
@@ -502,5 +528,32 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void noteSelectionNumChanged(int selectionNum) {
+        if (selectionNum > 0) {
+            if (!notesSelectedMenuMode) {
+                displayNotesSelectedMenu();
+                notesSelectedMenuMode = true;
+            }
+        }
+        if (selectionNum == 0) {
+            closeNotesSelectedMenuMode();
+            notesSelectedMenuMode = false;
+        }
+    }
+
+    private void closeNotesSelectedMenuMode() {
+        menu.clear();
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+    }
+
+    private void displayNotesSelectedMenu() {
+        menu.clear();
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.multi_selection_menu, menu);
+
     }
 }

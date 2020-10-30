@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.crimsonbeet.notes.R;
 import com.crimsonbeet.notes.models.Note;
+import com.crimsonbeet.notes.notesrecyclerview.selection.NoteItemSelectedListener;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
     private final NotesViewHolderClickListener noteViewHolderClickListener;
     private SelectionTracker<Long> selectionTracker;
 
-    public NotesAdapter(ArrayList<Note> notes, NotesViewHolderClickListener noteViewHolderClickListener) {
+    private final NoteItemSelectedListener noteItemSelectedListener;
+    private int selectedNotesNum = 0;
+
+    public NotesAdapter(ArrayList<Note> notes,
+                        NotesViewHolderClickListener noteViewHolderClickListener,
+                        NoteItemSelectedListener noteItemSelectedListener) {
         this.notes = notes;
         this.noteViewHolderClickListener = noteViewHolderClickListener;
+        this.noteItemSelectedListener = noteItemSelectedListener;
         setHasStableIds(true);
     }
 
@@ -41,6 +48,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesViewHolder> {
         }
 
         holder.bind(notes.get(position), isSelected);
+
+        int currentSelectionSize = selectionTracker.getSelection().size();
+        if (selectedNotesNum != currentSelectionSize) {
+            selectedNotesNum = currentSelectionSize;
+            noteItemSelectedListener.noteSelectionNumChanged(currentSelectionSize);
+        }
     }
 
     @Override
