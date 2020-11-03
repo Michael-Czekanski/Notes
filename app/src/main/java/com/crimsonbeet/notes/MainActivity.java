@@ -92,8 +92,18 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     private void handleReadingNotesError() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.dialogTitle_errorReadingNotes);
+        builder.setMessage(R.string.dialogMsg_errorReadingNotes);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**

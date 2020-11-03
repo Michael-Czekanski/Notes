@@ -8,6 +8,8 @@
     <string name="dialogTitle_changePassword">Change Password</string>
     <string name="title_addIcon">Add</string>
     <string name="title_changePassword">Change Password</string>
+    <string name="dialogTitle_errorReadingNotes">Error reading notes</string>
+
 
     <string name="ask_if_delete_notes">Delete selected notes?</string>
     <string name="yes">Yes</string>
@@ -30,6 +32,7 @@
     <string name="dialogMsg_provideNewPassword">Provide New Password</string>
     <string name="dialogMsg_newPasswordsNotMatch">New Passwords Don\'t Match</string>
     <string name="dialogMsg_passwordChanged">Password Changed</string>
+    <string name="dialogMsg_errorReadingNotes">Try restarting app</string>
 
     <!-- Shared preferences keys -->
     <string name="sharedPrefsKey_firstLaunch">firstLaunch</string>
