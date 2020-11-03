@@ -228,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             saveFirstLaunchFalse();
             showPasswordSetDialog();
             passwordGiven = true;
+            notes = new ArrayList<>();
+            initNotesRecyclerView();
         }
         else{
             if(password.isEmpty()){
@@ -411,13 +413,14 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private void passwordChecked() {
         passwordGiven = true;
         loadAllNotes();
-        displayNotes();
+        initNotesRecyclerView();
     }
 
     /**
-     * Displays notes on the recycler view. Use only once, after notes are loaded from json files.
+     * Initializes recycler view to display notes on it.
+     * Use after password is set or notes are loaded.
      */
-    private void displayNotes() {
+    private void initNotesRecyclerView() {
         notesAdapter = new NotesAdapter(notes, this, this);
         notesRecyclerView.setAdapter(notesAdapter);
 
