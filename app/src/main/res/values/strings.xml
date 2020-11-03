@@ -36,6 +36,9 @@
     <string name="dialogMsg_errorReadingNotes">Try restarting app</string>
     <string name="dialogMsg_errorSavingNote">Try again</string>
 
+    <!-- Toast messages -->
+    <string name="toastMsg_noteSaved">Note saved</string>
+
     <!-- Shared preferences keys -->
     <string name="sharedPrefsKey_firstLaunch">firstLaunch</string>
     <string name="sharedPrefsKey_password">password</string>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -342,6 +343,9 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
                         notesAdapter.notifyDataSetChanged();
                         try {
                             saveNote(note);
+                            Toast.makeText(this,
+                                    getResources().getString(R.string.toastMsg_noteSaved),
+                                    Toast.LENGTH_SHORT).show();
                         } catch (IOException e) {
                             handleNoteSaveError(note);
                         }
