@@ -22,20 +22,21 @@ Target SDK: 29 (Android 10.0)
 
 - Check password
 
-    ![CheckPassword](readmeFiles/passwordCheck.jpg =250x525)
+    <img src="readmeFiles/passwordCheck.jpg" alt="CheckPassword" width="250"/>
 
 - Note content
 
-    ![EditNote](readmeFiles/noteContent.jpg =250x525)
+    <img src="readmeFiles/noteContent.jpg" alt="EditNote" width="250"/>
 
 - Select notes
 
-    ![SelectNotes](readmeFiles/selectNotes.jpg =250x525)
+    <img src="readmeFiles/selectNotes.jpg" alt="SelectNotes" width="250"/>
 
 - Delete notes
 
-    ![DeleteNotes](readmeFiles/deleteNotes.jpg =250x525)
+    <img src="readmeFiles/deleteNotes.jpg" alt="DeleteNotes" width="250"/>
+    
 
 - Change password
 
-    ![DeleteNotes](readmeFiles/changePassword.jpg =250x525)
+    <img src="readmeFiles/changePassword.jpg" alt="ChangePassword" width="250"/>
