@@ -197,6 +197,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
         notesAdapter.notifyDataSetChanged();
         selectionTracker.clearSelection();
+
+        toggleNotesSelectedMenuMode(false);
     }
 
     private void showChangePasswordDialog() {
@@ -580,7 +582,10 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             }
         }
         if (selectionNum == 0) {
-            toggleNotesSelectedMenuMode(false);
+            if (notesSelectedMenuMode) {
+                toggleNotesSelectedMenuMode(false);
+            }
+
         }
     }
 
