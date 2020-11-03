@@ -96,11 +96,6 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         throw new UnsupportedOperationException();
     }
 
-    private void visualizeNotes() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Reads all notes.
      *
@@ -209,9 +204,6 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         showSetPasswordDialog();
     }
 
-    private void initialize() {
-        // TODO: Implement
-    }
 
     private void showSetPasswordDialog() {
         SetPasswordDialogFragment setPasswordDialog = new SetPasswordDialogFragment();
@@ -250,12 +242,6 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                initialize();
             }
         });
 
