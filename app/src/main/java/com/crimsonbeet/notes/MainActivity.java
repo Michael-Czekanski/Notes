@@ -312,15 +312,9 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     @Override
     public void createNewNote(String title) {
         int id = createNewNoteId();
-
         Note note = new Note(id, title, "");
-        try {
-            saveNote(note);
-            notes.add(note);
-        } catch (IOException e) {
-            handleNoteSaveError();
-        }
 
+        notes.add(note);
         openNoteActivity(note);
     }
 
@@ -347,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
                         try {
                             saveNote(note);
                         } catch (IOException e) {
-                            handleNoteSaveError();
+                            handleNoteSaveError(note);
                         }
                         break;
                     }
@@ -357,9 +351,28 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     }
 
-    private void handleNoteSaveError() {
-        // TODO: Implement
-        throw new UnsupportedOperationException();
+    /**
+     * Displays dialog that there
+     *
+     * @param note Note that was not saved properly.
+     */
+    private void handleNoteSaveError(Note note) {
+        final Note note1 = note;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.dialogTitle_errorSavingNote);
+        builder.setMessage(R.string.dialogMsg_errorSavingNote);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                openNoteActivity(note1);
+            }
+        });
     }
 
     private int createNewNoteId() {
