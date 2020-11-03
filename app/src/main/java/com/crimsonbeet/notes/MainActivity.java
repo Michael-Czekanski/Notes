@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     private Menu menu;
 
+    boolean passwordGiven = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,19 +140,22 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.new_note:
-                showNewNoteDialog();
-                return true;
-            case R.id.change_password:
-                showChangePasswordDialog();
-                return true;
-            case R.id.delete_notes:
-                showAreYouSureToDeleteDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (passwordGiven) {
+            switch (item.getItemId()) {
+                case R.id.new_note:
+                    showNewNoteDialog();
+                    return true;
+                case R.id.change_password:
+                    showChangePasswordDialog();
+                    return true;
+                case R.id.delete_notes:
+                    showAreYouSureToDeleteDialog();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showAreYouSureToDeleteDialog() {
@@ -220,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             saveUserPassword(password);
             saveFirstLaunchFalse();
             showPasswordSetDialog();
+            passwordGiven = true;
         }
         else{
             if(password.isEmpty()){
@@ -394,6 +400,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     private void passwordChecked() {
+        passwordGiven = true;
         loadAllNotes();
         displayNotes();
     }
