@@ -3,6 +3,7 @@ package com.crimsonbeet.notes.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+
 public class Note implements Parcelable {
     private final int id;
     private String title;
@@ -13,6 +14,17 @@ public class Note implements Parcelable {
         this.id = id;
         this.title = title;
         this.content = content;
+    }
+
+    /**
+     * Copy constructor
+     *
+     * @param other Note to copy
+     */
+    public Note(Note other) {
+        this.id = other.id;
+        this.title = other.title;
+        this.content = other.content;
     }
 
     public int getId() {
