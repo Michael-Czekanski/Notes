@@ -23,6 +23,7 @@ import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.crimsonbeet.notes.models.EncryptedNote;
 import com.crimsonbeet.notes.models.Note;
 import com.crimsonbeet.notes.notesrecyclerview.NotesAdapter;
 import com.crimsonbeet.notes.notesrecyclerview.NotesViewHolderClickListener;
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     boolean passwordGiven = false;
 
     private final SecurityManager securityManager = new SecurityManager();
+
+    private String givenPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,13 +135,19 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
         for (int noteId = MIN_NOTE_ID; noteId <= lastNoteId; noteId++) {
             try {
-                notes.add(jsonManager.readNoteFromJson(noteId));
+                notes.add(securityManager.decryptNote(jsonManager.readEncryptedNoteFromJson(noteId), givenPassword));
             } catch (FileNotFoundException ignored) {
             } catch (IOException e1) {
                 throw new IOException("Error reading note, noteId = " + noteId);
+            } catch (Exception e) {
+                handleDecryptingNoteError();
             }
         }
         return notes;
+    }
+
+    private void handleDecryptingNoteError() {
+        // TODO
     }
 
     private void showCheckPasswordDialog() {
@@ -243,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
             saveFirstLaunchFalse();
             showPasswordSetDialog();
             passwordGiven = true;
+            givenPassword = password;
             notes = new ArrayList<>();
             initNotesRecyclerView();
         }
@@ -307,6 +317,7 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
      * @param password Password to save.
      */
     private void saveUserPassword(String password) {
+        givenPassword = password;
         String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
         String keyPasswordSalt = getResources().getString(R.string.sharedPrefsKey_passwordSalt);
         String keyEncryptedNonce = getResources().getString(R.string.sharedPrefsKey_encryptedPasswordNonce);
@@ -432,8 +443,26 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         return newNoteId;
     }
 
+    /**
+     * Saves note securely by encrypting it.
+     *
+     * @param note Note to encrypt and save
+     * @throws IOException Error saving note.
+     */
     private void saveNote(Note note) throws IOException {
-        jsonManager.writeNoteToJson(note);
+        EncryptedNote encryptedNote;
+        try {
+            encryptedNote = securityManager.encryptNote(note, givenPassword);
+        } catch (Exception e) {
+            handleEncryptingNoteError();
+            return;
+        }
+
+        jsonManager.writeEncryptedNoteToJson(encryptedNote);
+    }
+
+    private void handleEncryptingNoteError() {
+        // TODO
     }
 
     @Override
@@ -444,14 +473,14 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         try {
             decryptedSavedPassword = retrievePasswordAndDecrypt(givenPassword);
         } catch (Exception e) {
-            handlePasswordRetrievingError();
+            showWrongPasswordDialog();
             return;
         }
 
         if (!givenPassword.equals(decryptedSavedPassword)) {
             showWrongPasswordDialog();
         } else {
-            passwordChecked();
+            passwordChecked(givenPassword);
         }
     }
 
@@ -460,8 +489,9 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         showCheckPasswordDialog();
     }
 
-    private void passwordChecked() {
+    private void passwordChecked(String password) {
         passwordGiven = true;
+        givenPassword = password;
         loadAllNotes();
         initNotesRecyclerView();
     }
