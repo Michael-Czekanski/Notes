@@ -23,11 +23,31 @@ public class JsonManager {
         return gson.toJson(note);
     }
 
+    /**
+     * Converts byte array to json string.
+     *
+     * @param byteArray Array to convert.
+     * @return Converted array as string.
+     */
+    public String byteArrayToJsonString(byte[] byteArray) {
+        return gson.toJson(byteArray);
+    }
+
+    /**
+     * Converts json string to byte array.
+     *
+     * @param byteArrayJsonString Byte array as json string.
+     * @return Converted byte array.
+     */
+    public byte[] byteArrayFromJsonString(String byteArrayJsonString) {
+        return gson.fromJson(byteArrayJsonString, byte[].class);
+    }
+
     private String getJsonFilename(int nodeId) {
         return filesDirectory + File.separator + "note" + nodeId + ".json";
     }
 
-    private boolean deserializationSuccess(Note deserializedNote){
+    private boolean deserializationSuccess(Note deserializedNote) {
         boolean success = true;
 
         if (deserializedNote.getTitle() == null) {

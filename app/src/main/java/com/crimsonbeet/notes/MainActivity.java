@@ -29,10 +29,20 @@ import com.crimsonbeet.notes.notesrecyclerview.NotesViewHolderClickListener;
 import com.crimsonbeet.notes.notesrecyclerview.selection.NoteItemSelectedListener;
 import com.crimsonbeet.notes.notesrecyclerview.selection.NotesDetailsLookup;
 import com.crimsonbeet.notes.utils.JsonManager;
+import com.crimsonbeet.notes.utils.SecurityManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class MainActivity extends AppCompatActivity implements SetPasswordDialogListener,
         NewNoteDialogListener, CheckPasswordDialogListener, NotesViewHolderClickListener,
@@ -62,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     private Menu menu;
 
     boolean passwordGiven = false;
+
+    private final SecurityManager securityManager = new SecurityManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,11 +300,37 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
         dialog.show();
     }
 
+    /**
+     * Securely saves encrypted user password, encrypted nonce and non-encrypted salt in shared preferences. <br>
+     * Creates new salt and new nonce used to encrypt password each time you call this method for security reasons. <br>
+     *
+     * @param password Password to save.
+     */
     private void saveUserPassword(String password) {
         String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
+        String keyPasswordSalt = getResources().getString(R.string.sharedPrefsKey_passwordSalt);
+        String keyEncryptedNonce = getResources().getString(R.string.sharedPrefsKey_encryptedPasswordNonce);
 
-        sharedPrefsEditor.putString(keyPassword, password);
-        sharedPrefsEditor.apply();
+        byte[] salt = securityManager.generateSalt();
+        byte[] nonce = securityManager.generateNonce(12);
+
+        try {
+            Key encryptionKey = securityManager.genKey(password, salt);
+            byte[] encryptedPassword = securityManager.encryptString(password, nonce, encryptionKey);
+            byte[] encryptedNonce = securityManager.encryptNonce(nonce, encryptionKey);
+
+            sharedPrefsEditor.putString(keyPassword, jsonManager.byteArrayToJsonString(encryptedPassword));
+            sharedPrefsEditor.putString(keyEncryptedNonce, jsonManager.byteArrayToJsonString(encryptedNonce));
+            sharedPrefsEditor.putString(keyPasswordSalt, jsonManager.byteArrayToJsonString(salt));
+            sharedPrefsEditor.apply();
+        } catch (Exception e) {
+            handlePasswordEncryptingError();
+        }
+
+    }
+
+    private void handlePasswordEncryptingError() {
+
     }
 
     private void showPasswordsNotMatchDialog() {
@@ -399,12 +437,18 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
     }
 
     @Override
-    public void checkPassword(String password) {
+    public void checkPassword(String givenPassword) {
         String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
 
-        String savedPassword = sharedPreferences.getString(keyPassword, null);
+        String decryptedSavedPassword;
+        try {
+            decryptedSavedPassword = retrievePasswordAndDecrypt(givenPassword);
+        } catch (Exception e) {
+            handlePasswordRetrievingError();
+            return;
+        }
 
-        if (!password.equals(savedPassword)) {
+        if (!givenPassword.equals(decryptedSavedPassword)) {
             showWrongPasswordDialog();
         } else {
             passwordChecked();
@@ -482,11 +526,15 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
 
     @Override
     public void changePassword(String oldPassword, String newPassword, String repeatedNewPassword) {
-        String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
+        String decryptedSavedPassword;
+        try {
+            decryptedSavedPassword = retrievePasswordAndDecrypt(oldPassword);
+        } catch (Exception e) {
+            handlePasswordRetrievingError();
+            return;
+        }
 
-        String savedPassword = sharedPreferences.getString(keyPassword, null);
-
-        if (!oldPassword.equals(savedPassword)) {
+        if (!oldPassword.equals(decryptedSavedPassword)) {
             showWrongOldPasswordDialog();
         } else {
             if (newPassword.isEmpty()) {
@@ -498,6 +546,31 @@ public class MainActivity extends AppCompatActivity implements SetPasswordDialog
                 saveUserPassword(newPassword);
             }
         }
+    }
+
+    private void handlePasswordRetrievingError() {
+    }
+
+    /**
+     * Retrieves encrypted password from shared preferences and decrypts it with usage of password given by user. If given password is correct then decrypted password will match given password.
+     *
+     * @param givenPassword Password given by user.
+     * @return Decrypted password from shared preferences. If givenPassword is correct then decrypted password will match givenPassword.
+     */
+    private String retrievePasswordAndDecrypt(String givenPassword) throws InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+        String keyPassword = getResources().getString(R.string.sharedPrefsKey_password);
+        String keyPasswordSalt = getResources().getString(R.string.sharedPrefsKey_passwordSalt);
+        String keyEncryptedNonce = getResources().getString(R.string.sharedPrefsKey_encryptedPasswordNonce);
+
+        byte[] salt = jsonManager.byteArrayFromJsonString(sharedPreferences.getString(keyPasswordSalt, null));
+        byte[] encryptedNonce = jsonManager.byteArrayFromJsonString(sharedPreferences.getString(keyEncryptedNonce, null));
+        byte[] encryptedPassword = jsonManager.byteArrayFromJsonString(sharedPreferences.getString(keyPassword, null));
+
+
+        Key key = securityManager.genKey(givenPassword, salt);
+        byte[] nonce = securityManager.decryptNonce(encryptedNonce, key);
+
+        return securityManager.decryptString(encryptedPassword, nonce, key);
     }
 
     private void showPasswordChangedDialog() {
