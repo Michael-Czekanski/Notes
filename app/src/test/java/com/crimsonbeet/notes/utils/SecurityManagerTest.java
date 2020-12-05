@@ -1,5 +1,8 @@
 package com.crimsonbeet.notes.utils;
 
+import com.crimsonbeet.notes.models.EncryptedNote;
+import com.crimsonbeet.notes.models.Note;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,8 +32,8 @@ public class SecurityManagerTest {
 
     @Test
     public void mockEncryptPassword2CTR() throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        byte[] salt = securityManager.getTestSalt();
-        byte[] nonce = securityManager.getTestNonce();
+        byte[] salt = securityManager.getPasswordSalt();
+        byte[] nonce = securityManager.getPasswordNonce();
 
         Key key = securityManager.mockGenKey(password, salt);
 
@@ -39,8 +42,8 @@ public class SecurityManagerTest {
 
     @Test
     public void mockDecryptPassword2CTR() throws InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, InvalidKeyException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException {
-        byte[] salt = securityManager.getTestSalt();
-        byte[] nonce = securityManager.getTestNonce();
+        byte[] salt = securityManager.getPasswordSalt();
+        byte[] nonce = securityManager.getPasswordNonce();
 
         Key key = securityManager.mockGenKey(password, salt);
 
@@ -52,8 +55,8 @@ public class SecurityManagerTest {
 
     @Test
     public void mockEncryptNonce() throws Exception {
-        byte[] salt = securityManager.getTestSalt();
-        byte[] nonce = securityManager.getTestNonce();
+        byte[] salt = securityManager.getPasswordSalt();
+        byte[] nonce = securityManager.getPasswordNonce();
         Key key = securityManager.mockGenKey(password, salt);
 
         assertArrayEquals(securityManager.mockEncryptNonce(nonce, key), securityManager.mockEncryptNonce(nonce, key));
@@ -61,13 +64,42 @@ public class SecurityManagerTest {
 
     @Test
     public void mockDecryptNonce() throws Exception {
-        byte[] salt = securityManager.getTestSalt();
-        byte[] nonce = securityManager.getTestNonce();
+        byte[] salt = securityManager.getPasswordSalt();
+        byte[] nonce = securityManager.getPasswordNonce();
         Key key = securityManager.mockGenKey(password, salt);
 
         byte[] encryptedNonce = securityManager.mockEncryptNonce(nonce, key);
         byte[] decryptedNonce = securityManager.mockDecryptNonce(encryptedNonce, key);
 
         assertArrayEquals(nonce, decryptedNonce);
+    }
+
+    @Test
+    public void mockEncryptNote() throws Exception {
+        Note note = new Note(1, "title", "123");
+
+        EncryptedNote encryptedNote = securityManager.mockEncryptNote(note, password);
+
+        Key key = securityManager.mockGenKey(password, encryptedNote.getSalt());
+
+        byte[] decryptedNonce = securityManager.mockDecryptNonce(encryptedNote.getEncryptedNonce(), key);
+        String decryptedTitle = securityManager.mockDecryptPassword2CTR(encryptedNote.getEncryptedTitle(), decryptedNonce, key);
+        String decryptedContent = securityManager.mockDecryptPassword2CTR(encryptedNote.getEncryptedContent(), decryptedNonce, key);
+
+        assertEquals(note.getContent(), decryptedContent);
+        assertEquals(note.getTitle(), decryptedTitle);
+    }
+
+    @Test
+    public void mockDecryptNote() throws BadPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
+        Note note = new Note(1, "title", "123");
+
+        EncryptedNote encryptedNote = securityManager.mockEncryptNote(note, password);
+
+        Note decryptedNote = securityManager.mockDecryptNote(encryptedNote, password);
+
+        assertEquals(note.getId(), decryptedNote.getId());
+        assertEquals(note.getTitle(), decryptedNote.getTitle());
+        assertEquals(note.getContent(), decryptedNote.getContent());
     }
 }

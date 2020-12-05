@@ -16,8 +16,8 @@ import android.os.Parcelable;
  */
 public class EncryptedNote implements Parcelable {
     private final int id;
-    private final String encryptedTitle;
-    private final String encryptedContent;
+    private final byte[] encryptedTitle;
+    private final byte[] encryptedContent;
     /**
      * <b>salt</b> will be used to create key, key will be used to decrypt:
      * <ul>
@@ -32,7 +32,7 @@ public class EncryptedNote implements Parcelable {
      */
     private final byte[] encryptedNonce;
 
-    public EncryptedNote(int id, String encryptedTitle, String encryptedContent, byte[] salt, byte[] encryptedNonce) {
+    public EncryptedNote(int id, byte[] encryptedTitle, byte[] encryptedContent, byte[] salt, byte[] encryptedNonce) {
         this.id = id;
         this.encryptedTitle = encryptedTitle;
         this.encryptedContent = encryptedContent;
@@ -42,8 +42,8 @@ public class EncryptedNote implements Parcelable {
 
     protected EncryptedNote(Parcel in) {
         id = in.readInt();
-        encryptedTitle = in.readString();
-        encryptedContent = in.readString();
+        encryptedTitle = in.createByteArray();
+        encryptedContent = in.createByteArray();
         salt = in.createByteArray();
         encryptedNonce = in.createByteArray();
     }
@@ -64,11 +64,11 @@ public class EncryptedNote implements Parcelable {
         return id;
     }
 
-    public String getEncryptedTitle() {
+    public byte[] getEncryptedTitle() {
         return encryptedTitle;
     }
 
-    public String getEncryptedContent() {
+    public byte[] getEncryptedContent() {
         return encryptedContent;
     }
 
@@ -88,8 +88,8 @@ public class EncryptedNote implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
-        parcel.writeString(encryptedTitle);
-        parcel.writeString(encryptedContent);
+        parcel.writeByteArray(encryptedTitle);
+        parcel.writeByteArray(encryptedContent);
         parcel.writeByteArray(salt);
         parcel.writeByteArray(encryptedNonce);
     }

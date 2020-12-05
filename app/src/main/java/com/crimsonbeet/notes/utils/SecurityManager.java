@@ -24,7 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityManager {
 
-    private byte[] testSalt;
+    private byte[] passwordSalt;
     private static final int SALT_SIZE = 24;
 
     /**
@@ -33,12 +33,12 @@ public class SecurityManager {
      */
     private static final int NONCE_SIZE = 96 / 8;
 
-    public byte[] getTestNonce() {
-        return testNonce;
+    public byte[] getPasswordNonce() {
+        return passwordNonce;
     }
 
 
-    private byte[] testNonce;
+    private byte[] passwordNonce;
 
     private static final String cipherTransformation = "AES/CTR/NoPadding";
 
@@ -47,8 +47,8 @@ public class SecurityManager {
      * Generuje salt używaną do generowania klucza i noncję używaną do szyfrowania
      */
     public void mockFirstLaunch() {
-        testSalt = generateSalt(SALT_SIZE);
-        testNonce = generateNonce(NONCE_SIZE);
+        passwordSalt = generateSalt(SALT_SIZE);
+        passwordNonce = generateNonce(NONCE_SIZE);
     }
 
     /**
@@ -113,8 +113,8 @@ public class SecurityManager {
         return new SecretKeySpec(tmp.getEncoded(), "AES");
     }
 
-    public byte[] getTestSalt() {
-        return testSalt;
+    public byte[] getPasswordSalt() {
+        return passwordSalt;
     }
 
     /**
@@ -172,23 +172,53 @@ public class SecurityManager {
 
 
     /**
-     * Szyfruje zawartosc notatki. Generuje nowe nonce oraz sól.
+     * Encrypts note.
      *
-     * @param note Notatka do zaszyfrowania
+     * @param note         Notatka do zaszyfrowania
+     * @param userPassword
      * @return Zwraca notatkę z zaszyfrowaną wiadomością
      * @see EncryptedNote
      */
-    public EncryptedNote mockEncryptNote(Note note, Key key) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
+    public EncryptedNote mockEncryptNote(Note note, String userPassword) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeySpecException {
         byte[] salt = generateSalt(SALT_SIZE);
+        Key key = mockGenKey(userPassword, salt);
+
         byte[] nonce = generateNonce(NONCE_SIZE);
 
         byte[] encryptedNonce = mockEncryptNonce(nonce, key);
 
-        String encryptedTitle = new String(mockEncryptPassword2CTR(note.getContent(), nonce, key));
-        String encryptedContent = new String(mockEncryptPassword2CTR(note.getTitle(), nonce, key));
+        byte[] encryptedTitle = mockEncryptPassword2CTR(note.getTitle(), nonce, key);
+
+
+        byte[] encryptedContent = mockEncryptPassword2CTR(note.getContent(), nonce, key);
 
         return new EncryptedNote(note.getId(), encryptedTitle,
                 encryptedContent, salt, encryptedNonce);
+    }
+
+    /**
+     * Decrypts encrypted note.
+     *
+     * @param encryptedNote Note to decrypt.
+     * @param userPassword  Used to create key to decrypt.
+     * @return Decrypted note.
+     * @throws InvalidKeySpecException
+     * @throws NoSuchAlgorithmException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws NoSuchPaddingException
+     * @throws InvalidKeyException
+     * @throws InvalidAlgorithmParameterException
+     */
+    public Note mockDecryptNote(EncryptedNote encryptedNote, String userPassword) throws InvalidKeySpecException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+        Key key = mockGenKey(userPassword, encryptedNote.getSalt());
+
+        byte[] decryptedNonce = mockDecryptNonce(encryptedNote.getEncryptedNonce(), key);
+
+        String decryptedTitle = mockDecryptPassword2CTR(encryptedNote.getEncryptedTitle(), decryptedNonce, key);
+        String decryptedContent = mockDecryptPassword2CTR(encryptedNote.getEncryptedContent(), decryptedNonce, key);
+
+        return new Note(encryptedNote.getId(), decryptedTitle, decryptedContent);
     }
 
     /**
