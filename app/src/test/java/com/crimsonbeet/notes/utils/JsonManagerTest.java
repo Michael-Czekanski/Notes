@@ -48,7 +48,7 @@ public class JsonManagerTest {
 
     @Test
     public void readNoteFromJson() throws IOException {
-        JsonManager jsonManager = new JsonManager();
+        JsonManager jsonManager = new JsonManager(new File("."));
 
         int expectedNoteId = 1;
         String expectedNoteTitle = "Title";
@@ -69,7 +69,7 @@ public class JsonManagerTest {
 
     @Test
     public void writeNoteToJson() throws IOException {
-        JsonManager jsonManager = new JsonManager();
+        JsonManager jsonManager = new JsonManager(new File("."));
 
         Note note = new Note(1, "Title", "Content");
         String filename = jsonManager.writeNoteToJson(note);
